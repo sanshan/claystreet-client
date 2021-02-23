@@ -1,0 +1,16 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <ng-content></ng-content>
+    <img class="navbar-logo" src="assets/images/mini-logo.png" alt="Logo">
+    <span>ClayStreet Client</span>
+    <span class="spacer"></span>
+    <button
+      disableRipple="true"
+      *ngIf="!isLoggedIn"
+      (click)="signIn($event)"
+      color="primary" mat-flat-button aria-label="Login"
+    >
+      Sign In
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>

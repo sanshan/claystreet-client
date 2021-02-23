@@ -1,0 +1,13 @@
+.base-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .app-navbar {
+    flex-grow: 0
+  }
+
+  .app-sidenav {
+    flex-grow: 1
+  }
+}
