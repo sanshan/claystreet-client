@@ -1,4 +1,34 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+.app-layout {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  flex-direction: column;
+
+  background-color: maroon;
+
+  &.not-found-layout {
+    align-items: center;
+    justify-content: center;
+  }
+
+  .app-navbar {
+    flex-grow: 0
+  }
+
+  .app-sidenav {
+    flex-grow: 1
+  }
+
+
+}

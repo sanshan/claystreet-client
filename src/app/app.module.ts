@@ -1,18 +1,22 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-
-import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {GoogleApiModule, NG_GAPI_CONFIG, NgGapiClientConfig} from 'ng-gapi';
 import {environment} from '../environments/environment';
 import {AppNavbarModule} from './modules/app-navbar/app-navbar.module';
-import {UserService} from './services/auth.service';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {AppSidenavModule} from './modules/app-sidenav/app-sidenav.module';
-import {AppSourceListModule} from './modules/app-source-list/app-source-list.module';
-import {AppSheetViewModule} from './modules/app-sheet-view/app-sheet-view.module';
+import {GraphQLModule} from './graphql.module';
+import {HttpClientModule} from '@angular/common/http';
+import {AppRoutingModule} from './routing/app-routing.module';
+import {APOLLO_OPTIONS} from 'apollo-angular';
+import {LayoutsModule} from './layouts/layouts.module';
+import {DATASETS_CASH} from './pages/datasets-page/cache/datasets';
+import {ReactiveFormsModule} from '@angular/forms';
+import {FormlyMaterialModule} from '@ngx-formly/material';
+import {UserService} from './services/auth.service';
 
 const gapiClientConfig: NgGapiClientConfig = {
   client_id: environment.G_API_CLIENT_ID,
@@ -24,24 +28,37 @@ const gapiClientConfig: NgGapiClientConfig = {
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        NoopAnimationsModule,
-        GoogleApiModule.forRoot({
-            provide: NG_GAPI_CONFIG,
-            useValue: gapiClientConfig
-        }),
-        AppNavbarModule,
-        MatButtonModule,
-        MatIconModule,
-        AppSidenavModule,
-        AppSourceListModule,
-        AppSheetViewModule,
-    ],
-  providers: [],
+  imports: [
+    BrowserModule,
+    NoopAnimationsModule,
+    GoogleApiModule.forRoot({
+      provide: NG_GAPI_CONFIG,
+      useValue: gapiClientConfig
+    }),
+    AppNavbarModule,
+    MatButtonModule,
+    MatIconModule,
+    AppSidenavModule,
+    GraphQLModule,
+    HttpClientModule,
+    LayoutsModule,
+    AppRoutingModule,
+    ReactiveFormsModule,
+    FormlyMaterialModule,
+  ],
+  providers: [
+    {
+      provide: APOLLO_OPTIONS,
+      // tslint:disable-next-line:typedef
+      useFactory() {
+        return {
+          cache: DATASETS_CASH,
+        };
+      },
+    },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

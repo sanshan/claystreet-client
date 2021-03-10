@@ -1,0 +1,8 @@
+<ng-container *ngIf="cards$ | async as cards">
+  <div class="entity-list">
+    <app-list-card *ngFor="let card of cards"
+                   [card]="card"
+                   (oncardclick)="select($event)"
+    ></app-list-card>
+  </div>
+</ng-container>

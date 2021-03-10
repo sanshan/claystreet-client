@@ -1,0 +1,51 @@
+query SheetData($token: String, $spreadsheetId: String!, $ranges: String){
+  SheetsApi(access_token: $token) {
+    spreadsheets {
+      get(
+        spreadsheetId: $spreadsheetId
+        ranges: $ranges
+        includeGridData: true
+      ) {
+        properties {
+          title
+        }
+        sheets {
+          data {
+            rowData {
+              values {
+                effectiveValue {
+                  stringValue
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+query SheetMeta($token: String, $spreadsheetId: String!, $ranges: String) {
+  SheetsApi(access_token: $token) {
+    spreadsheets {
+      get(
+        spreadsheetId: $spreadsheetId,
+        ranges: $ranges,
+        includeGridData: true
+      ) {
+        properties {
+          title
+        }
+        sheets {
+          data {
+            rowData {
+              values {
+                formattedValue
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -4,31 +4,37 @@ import {tap} from 'rxjs/operators';
 
 type SheetSourceStatus = 'basic' | 'primary' | 'warn';
 
-export interface SheetSourceOptions {
-  id?: string;
+export interface SheetMeta {
   title: string;
-  range: string;
   size?: number;
+  data: unknown[];
+}
+
+export interface SheetSourceOptions {
+  id: string;
+  range: string;
   status?: SheetSourceStatus;
   isLoading?: boolean;
   isActive?: boolean;
-  updatedAt?: Date | null;
+  updatedAt: Date;
 }
 
-export class SheetSource {
+export class SheetSource implements SheetMeta, SheetSourceOptions {
   id: string;
   title: string;
   range: string;
+  data: unknown[];
   size: number;
   status: SheetSourceStatus;
   isLoading: boolean;
   isActive: boolean;
-  updatedAt: Date | null;
+  updatedAt: Date;
 
-  constructor(options: SheetSourceOptions) {
-    this.id = options?.id ?? Date.now() + '';
-    this.title = options.title;
+  constructor(options: SheetSourceOptions & Partial<SheetMeta>) {
+    this.id = options.id;
+    this.title = options.title ?? 'unknown';
     this.range = options.range;
+    this.data = options.data ?? [];
     this.size = options.size ?? 0;
     this.status = options.status ?? 'basic';
     this.isLoading = options.isLoading ?? false;
@@ -42,21 +48,20 @@ export class SheetSource {
 }
 
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class SourceListService {
   public static readonly LOCAL_STORAGE_KEY: string = 'source-list';
-  private sourceList$: BehaviorSubject<SheetSourceOptions[]> = new BehaviorSubject<SheetSourceOptions[]>(this.getFromStorage());
-  stream$: Observable<SheetSourceOptions[]> = this.sourceList$.pipe(
+  // tslint:disable-next-line:max-line-length
+  private sourceList$: BehaviorSubject<(SheetSourceOptions & SheetMeta)[]> = new BehaviorSubject<(SheetSourceOptions & SheetMeta)[]>(this.getFromStorage());
+  stream$: Observable<(SheetSourceOptions & SheetMeta)[]> = this.sourceList$.pipe(
     tap(this.saveToStorage)
-  ) as Observable<SheetSourceOptions[]>;
+  ) as Observable<(SheetSourceOptions & SheetMeta)[]>;
 
   constructor() {
   }
 
-  getFromStorage(): SheetSourceOptions[] {
-    let json: SheetSourceOptions[];
+  getFromStorage(): (SheetSourceOptions & SheetMeta)[] {
+    let json: (SheetSourceOptions & SheetMeta)[];
     try {
       json = JSON.parse(localStorage.getItem(SourceListService.LOCAL_STORAGE_KEY) ?? '[]');
     } catch (e) {
@@ -74,18 +79,18 @@ export class SourceListService {
     localStorage.removeItem(SourceListService.LOCAL_STORAGE_KEY);
   }
 
-  add(source: SheetSourceOptions): void {
-    const newState: SheetSourceOptions[] = [...this.sourceList$.value, source];
+  add(source: (SheetSourceOptions & SheetMeta)): void {
+    const newState: (SheetSourceOptions & SheetMeta)[] = [...this.sourceList$.value, source];
     this.sourceList$.next(newState);
   }
 
-  delete(selected: SheetSourceOptions[]): void {
-    const newState: SheetSourceOptions[] = this.sourceList$.value.filter((source) => !selected.includes(source));
+  delete(selected: (SheetSourceOptions & SheetMeta)[]): void {
+    const newState: (SheetSourceOptions & SheetMeta)[] = this.sourceList$.value.filter((source) => !selected.includes(source));
 
     this.sourceList$.next(newState);
   }
 
-  refresh(selected: SheetSourceOptions[]): void {
+  refresh(selected: (SheetSourceOptions & SheetMeta)[]): void {
     const indexes = selected.map(((item) => this.sourceList$.value.indexOf(item)));
 
     const newState = [...this.sourceList$.value];
@@ -99,7 +104,21 @@ export class SourceListService {
     this.sourceList$.next(newState);
   }
 
-  active(source: SheetSourceOptions): void {
+  complete(completed: (SheetSourceOptions & SheetMeta)[]): void {
+    const indexes = completed.map(((item) => this.sourceList$.value.indexOf(item)));
+
+    const newState = [...this.sourceList$.value];
+    indexes.forEach((index) => {
+      newState.splice(index, 1, {
+        ...newState[index],
+        isLoading: false
+      });
+    });
+
+    this.sourceList$.next(newState);
+  }
+
+  active(source: (SheetSourceOptions & SheetMeta)): void {
     const newState = [...this.sourceList$.value ?? []];
 
     const index = newState.indexOf(source);

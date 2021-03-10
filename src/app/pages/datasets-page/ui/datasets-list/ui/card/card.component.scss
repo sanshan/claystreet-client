@@ -1,0 +1,76 @@
+.card {
+  margin: 15px;
+  background: rgba(242, 242, 242, 0.73);
+  padding: 8px;
+
+  .title {
+    font-size: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .content {
+    //background: white;
+    //border-radius: 5px;
+
+    .content-row {
+      font-size: 14px;
+      color: #333;
+      padding: 2px 3px;
+
+      .row-value, .row-key {
+        display: inline-block;
+      }
+
+      .row-value {
+        color: #222;
+      }
+
+      .row-key {
+        color: #666;
+        padding-right: 5px;
+      }
+
+      .success {
+        background: green;
+        border-radius: 5px;
+        color: white;
+        padding-left: 5px;
+        padding-right: 5px;
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+      .warning {
+        background: goldenrod;
+        border-radius: 5px;
+        color: white;
+        padding-left: 5px;
+        padding-right: 5px;
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+      .danger {
+        background: red;
+        border-radius: 5px;
+        color: white;
+        padding-left: 5px;
+        padding-right: 5px;
+        font-size: 12px;
+        font-weight: bold;
+      }
+    }
+
+    .mat-list-base .mat-list-item, .mat-list-base .mat-list-option {
+      height: 24px !important;
+    }
+  }
+}
+
+.card:hover {
+  cursor: pointer;
+  transform: scale(1.01);
+  box-shadow: 0 2.5px 5px rgba(0, 0, 0, .12), 0 1px 2px rgba(0, 0, 0, .06);
+}

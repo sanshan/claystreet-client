@@ -1,5 +1,6 @@
 <div class="app-sheet-view-card">
-  <mat-card *ngIf="source$ | async as source" class="card">
+  VIEW
+  <mat-card *ngIf="source$ | async as source; else empty" class="card">
     <mat-card-header>
       <div mat-card-avatar class="example-header-image">
         <mat-icon>table_chart</mat-icon>
@@ -19,4 +20,5 @@
     <!--      <button mat-button>SHARE</button>-->
     <!--    </mat-card-actions>-->
   </mat-card>
+  <ng-template #empty>empty</ng-template>
 </div>

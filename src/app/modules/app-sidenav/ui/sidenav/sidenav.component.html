@@ -2,14 +2,15 @@
 
   <mat-sidenav-container class="sidenav-container">
     <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'"
+                 [opened]="opened$ | async"
                  [fixedInViewport]="mobileQuery.matches">
       <mat-nav-list>
-        <ng-content select="app-source-list"></ng-content>
+        <ng-content select=".app-sidenav"></ng-content>
       </mat-nav-list>
     </mat-sidenav>
 
     <mat-sidenav-content>
-      <ng-content select="app-sheet-view"></ng-content>
+      <ng-content select=".app-sidenav-content"></ng-content>
     </mat-sidenav-content>
   </mat-sidenav-container>
 
